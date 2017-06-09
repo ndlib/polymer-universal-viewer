@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>universal-viewer demo</title>
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../bower_components/iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../bower_components/iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../universal-viewer.html">
+
+    <custom-style>
+      <style is="custom-style" include="demo-pages-shared-styles">
+      </style>
+    </custom-style>
+  </head>
+  <body>
+    <div class="vertical-section-container centered">
+      <h3>Basic universal-viewer demo</h3>
+      <demo-snippet>
+        <template>
+          <universal-viewer uri="https://repository.library.brown.edu/iiif/presentation/bdr:403473/manifest.json"></universal-viewer>
+        </template>
+      </demo-snippet>
+      <h3>Width-specified universal-viewer demo</h3>
+      <demo-snippet>
+        <template>
+          <universal-viewer
+            uri="https://repository.library.brown.edu/iiif/presentation/bdr:403473/manifest.json"
+            width="900px"
+          ></universal-viewer>
+        </template>
+      </demo-snippet>
+    </div>
+    <universal-viewer uri="https://repository.library.brown.edu/iiif/presentation/bdr:403473/manifest.json"></universal-viewer>
+  </body>
+</html>

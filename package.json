@@ -1,0 +1,12 @@
+{
+  "name": "universal-viewer",
+  "version": "1.0.0",
+  "main": "universal-viewer.html",
+  "author": "Cole Hansen <cole_hansen@brown.edu>",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-preprocess": "^2.0.0",
+    "html-string-builder": "^1.0.0"
+  }
+}

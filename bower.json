@@ -1,0 +1,21 @@
+{
+  "name": "universal-viewer",
+  "description": "A web component for encapsulating a universal viewer.",
+  "main": "universal-viewer.html",
+  "authors": [
+    "Cole Hansen <cole_hansen@brown.edu>"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iron-demo-helpers": "^2.0.0",
+    "polymer": "Polymer/polymer#^2.0.0"
+  }
+}
