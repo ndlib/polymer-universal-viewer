@@ -1,3 +1,8 @@
+<!-- @if false !>
+  NOTE: This file should not be used directly. It doesn't have the correct
+  paths to be able to be served directly from this directory. It is used as part
+  of the build process. See the demos in build/es{201}5/demo, instead.
+<!-- @endif -->
 <!doctype html>
 <html lang="en">
   <head>
@@ -30,11 +35,50 @@
         <template>
           <universal-viewer
             uri="https://repository.library.brown.edu/iiif/presentation/bdr:403473/manifest.json"
-            width="900px"
+            width="700px"
+          ></universal-viewer>
+        </template>
+      </demo-snippet>
+      <h3>Height-specified universal-viewer demo</h3>
+      <demo-snippet>
+        <template>
+          <universal-viewer
+            uri="https://repository.library.brown.edu/iiif/presentation/bdr:403473/manifest.json"
+            height="900px"
+          ></universal-viewer>
+        </template>
+      </demo-snippet>
+      <h3>Size-specified universal-viewer demo</h3>
+      <demo-snippet>
+        <template>
+          <universal-viewer
+            uri="https://repository.library.brown.edu/iiif/presentation/bdr:403473/manifest.json"
+            width="800px"
+            height="800px"
           ></universal-viewer>
         </template>
       </demo-snippet>
     </div>
-    <universal-viewer uri="https://repository.library.brown.edu/iiif/presentation/bdr:403473/manifest.json"></universal-viewer>
+    <div>
+      <h2>Non-constrained demos</h2>
+      <h3>Basic universal-viewer demo</h3>
+      <universal-viewer uri="https://repository.library.brown.edu/iiif/presentation/bdr:403473/manifest.json"></universal-viewer>
+      <h3>Width-specified universal-viewer demo</h3>
+      <universal-viewer
+        uri="https://repository.library.brown.edu/iiif/presentation/bdr:403473/manifest.json"
+        width="700px"
+      ></universal-viewer>
+      <h3>Height-specified universal-viewer demo</h3>
+      <universal-viewer
+        uri="https://repository.library.brown.edu/iiif/presentation/bdr:403473/manifest.json"
+        height="900px"
+      ></universal-viewer>
+      <h3>Size-specified universal-viewer demo</h3>
+      <universal-viewer
+        uri="https://repository.library.brown.edu/iiif/presentation/bdr:403473/manifest.json"
+        width="800px"
+        height="800px"
+      ></universal-viewer>
+    </div>
   </body>
 </html>
