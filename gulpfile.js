@@ -3,7 +3,6 @@ const gulpif = require('gulp-if');
 const rename = require("gulp-rename");
 const preprocess = require('gulp-preprocess');
 const babel = require('gulp-babel');
-const uglify = require('gulp-uglify');
 const cssSlam = require('css-slam').gulp;
 const htmlMinifier = require('gulp-html-minifier');
 const HtmlSplitter = require('polymer-build').HtmlSplitter;
@@ -323,7 +322,6 @@ gulp.task('build:production', () => {
         // ]
       }
     )))
-    .pipe(gulpif(/\.js$/, uglify()))
     .pipe(gulpif(/\.css$/, cssSlam()))
     .pipe(gulpif(/\.html$/, htmlMinifier()))
     .pipe(sourcesHtmlSplitterES5.rejoin()); // rejoins those files back into their original location
@@ -332,7 +330,6 @@ gulp.task('build:production', () => {
   const sourcesHtmlSplitterES2015 = new HtmlSplitter();
   const sourcesStreamES2015 = processedES2015Sources
     .pipe(sourcesHtmlSplitterES2015.split()) // split inline JS & CSS out into individual .js & .css files
-    .pipe(gulpif(/\.js$/, uglify()))
     .pipe(gulpif(/\.css$/, cssSlam()))
     .pipe(gulpif(/\.html$/, htmlMinifier()))
     .pipe(sourcesHtmlSplitterES2015.rejoin()); // rejoins those files back into their original location
