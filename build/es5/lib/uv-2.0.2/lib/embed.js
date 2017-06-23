@@ -1,3 +1,12 @@
+function getElementsAcrossShadows(queryString) {
+  let arrayOfDivs = []
+  let $uv = document.querySelectorAll("universal-viewer");
+  for (let i = 0; i < $uv.length; ++i) {
+    arrayOfDivs = arrayOfDivs.concat([...$uv[i].shadowRoot.querySelectorAll(queryString)]);
+  }
+  return arrayOfDivs;
+}
+
 // uv-2.0.2
 
 //https://raw.githubusercontent.com/jfriend00/docReady/master/docready.js
@@ -53,17 +62,19 @@
         }
         // if document already ready to go, schedule the ready function to run
         if (document.readyState === "complete") {
-            setTimeout(ready, 1);
+            //setTimeout(ready, 1);
+            ready();
         } else if (!readyEventHandlersInstalled) {
             // otherwise if we don't have event handlers installed, install them
             if (document.addEventListener) {
                 // first choice is DOMContentLoaded event
-                document.addEventListener("DOMContentLoaded", ready, false);
+                // document.addEventListener("DOMContentLoaded", ready, false);
                 // backup is window load event
-                window.addEventListener("load", ready, false);
+                // window.addEventListener("load", ready, false);
+                ready();
             } else {
                 // must be IE
-                document.attachEvent("onreadystatechange", readyStateChange);
+                //document.attachEvent("onreadystatechange", readyStateChange);
                 window.attachEvent("onload", ready);
             }
             readyEventHandlersInstalled = true;
@@ -73,22 +84,21 @@
 
 docReady(function() {
     (function (window, document, version, callback) {
-
         // only run this script once per page.
         if (window.embedScriptIncluded) return;
 
         window.embedScriptIncluded = true;
 
         // get the script location.
-        var s = document.getElementById('embedUV');
+        // var s = document.getElementById('embedUV');
+        //
+        // if (!s){
+        //     var scripts = document.getElementsByTagName('script');
+        //     s = scripts[scripts.length - 1];
+        // }
 
-        if (!s){
-            var scripts = document.getElementsByTagName('script');
-            s = scripts[scripts.length - 1];
-        }
-
-        var scriptUri = (/.*src="(.*)"/).exec(s.outerHTML)[1];
-        var absScriptUri = s.src;
+        var scriptUri = "../lib/uv-2.0.2/lib/embed.js";// (/.*src="(.*)"/).exec(s.outerHTML)[1];
+        var absScriptUri = "../lib/uv-2.0.2/lib/embed.js";//s.src;
 
         var j, d;
         var loaded = false;
@@ -194,7 +204,7 @@ docReady(function() {
 
         $.when($.getScript(easyXDMUri),
                $.getScript(json2Uri)).done(function () {
-                   initPlayers($('.uv').not('[data-no-load*=true]'));
+                   initPlayers($(getElementsAcrossShadows(".uv")));
                });
 
         // find all players on a page and initialise them
@@ -208,7 +218,6 @@ docReady(function() {
 
         function app(element, isHomeDomain, isOnlyInstance) {
             var socket, $app, $img, $appFrame, manifestUri, collectionIndex, manifestIndex, sequenceIndex, canvasIndex, defaultToFullScreen, isLightbox, xywh, rotation, config, jsonp, locale, isFullScreen, dimensions, top, left, lastScroll, reload;
-
             $app = $(element);
 
             // Default to fullscreen

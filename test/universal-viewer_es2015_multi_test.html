@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>universal-viewer test</title>
+
+    <script src="../build/es2015/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../build/es2015/bower_components/web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../build/es2015/universal-viewer.html">
+  </head>
+  <body>
+
+    <universal-viewer
+      id="one"
+      uri="https://repository.library.brown.edu/iiif/presentation/bdr:403473/manifest.json"
+    ></universal-viewer>
+
+    <universal-viewer
+      id="two"
+      uri="https://repository.library.brown.edu/iiif/presentation/bdr:403473/manifest.json"
+    ></universal-viewer>
+
+    <script>
+      suite('universal-viewer', function() {
+
+        test('instantiating the elements with uri properties works', function(done) {
+          this.timeout(120000);
+          //let start = new Date();
+          var isDone1 = false,
+              isDone2 = false;
+          var element1 = document.getElementById("one");
+          var element2 = document.getElementById("two");
+          assert.equal(element1.style.width, '100%');
+          assert.equal(element1.style.height, '600px');
+          assert.equal(element2.style.width, '100%');
+          assert.equal(element2.style.height, '600px');
+          function furtherTest1() {
+            var element1ShadowRoot = element1.shadowRoot;
+            var universaliframe = element1ShadowRoot.querySelector(".uv iframe");
+            if (!universaliframe) {
+              window.setTimeout(furtherTest1, 750);
+            } else {
+              assert.isDefined(universaliframe);
+              var iframeWin = universaliframe.contentWindow;
+              if (!iframeWin) {
+                window.setTimeout(furtherTest1, 750);
+              } else {
+                assert.isDefined(iframeWin);
+                let uv = iframeWin.document.querySelector("#app");
+                if (!uv) {
+                  window.setTimeout(furtherTest1, 750);
+                } else {
+                  let uvChildNodes = uv.childNodes;
+                  if (uvChildNodes.length != 7) {
+                    window.setTimeout(furtherTest1, 750);
+                  } else {
+                    assert.equal(uvChildNodes.length, 7);
+                    isDone1 = true;
+                  }
+                }
+              }
+            }
+          }
+          function furtherTest2() {
+            var element2ShadowRoot = element2.shadowRoot;
+            var universaliframe = element2ShadowRoot.querySelector(".uv iframe");
+            if (!universaliframe) {
+              window.setTimeout(furtherTest2, 750);
+            } else {
+              assert.isDefined(universaliframe);
+              var iframeWin = universaliframe.contentWindow;
+              if (!iframeWin) {
+                window.setTimeout(furtherTest2, 750);
+              } else {
+                assert.isDefined(iframeWin);
+                let uv = iframeWin.document.querySelector("#app");
+                if (!uv) {
+                  window.setTimeout(furtherTest2, 750);
+                } else {
+                  let uvChildNodes = uv.childNodes;
+                  if (uvChildNodes.length != 7) {
+                    window.setTimeout(furtherTest2, 750);
+                  } else {
+                    assert.equal(uvChildNodes.length, 7);
+                    isDone2 = true;
+                  }
+                }
+              }
+            }
+          }
+          furtherTest1();
+          furtherTest2();
+          function isDone() {
+            if (isDone1 && isDone2) done();
+            else window.setTimeout(isDone, 750);
+          }
+          isDone();
+          // window.setTimeout(furtherTest, 2000);
+        });
+
+      });
+    </script>
+
+  </body>
+</html>
