@@ -1,81 +1,33 @@
 <!-- @if NODE_ENV='production' !>
-<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../../../polymer/polymer-element.html">
+<!-- @endif -->
+<!-- @if NODE_ENV='test' !>
+<link rel="import" href="./bower_components/polymer/polymer-element.html">
 <!-- @endif -->
 <!-- @if NODE_ENV='dev' !>
 <link rel="import" href="./bower_components/polymer/polymer-element.html">
 <!-- @endif -->
-<script>
-<!-- @include ../node_modules/html-string-builder/dist/index.js -->
-</script>
+<link rel="import" href="./lib/embed.html">
+
 <dom-module id="universal-viewer">
   <template>
     <style>
     :host {
       display: block;
-      width: var(--universal-viewer-component-width, [[width]]);
-      height: var(--universal-viewer-component-height, [[height]]);
       @apply --universal-viewer-component-theme;
+      width: var(--universal-viewer-component-width);
+      height: var(--universal-viewer-component-height);
     }
     :host div {
       width: 100%;
       height: 100%;
     }
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: 0;
-    }
     </style>
 
-    <div>
-      <iframe id="iframe-viewer" allowfullscreen="allowfullscreen" seamless='seamless'></iframe>
+    <div id="container-{{_viewerCount}}">
+      <div class="uv" data-uri$="[[uri]]" width="100%" height="100%" overflow="hidden" seamless="seamless"></div>
     </div>
+
   </template>
-
-  <script>
-    class UniversalViewer extends Polymer.Element {
-      constructor() {
-        super();
-      }
-
-      static get properties() {
-        return {
-          width: {
-            type: String,
-            value: "100%"
-          },
-          height: {
-            type: String,
-            value: "600px"
-          },
-          type: {
-            type: String,
-            value: "manifest"
-          },
-          uri: String
-        }
-      }
-
-      static get is() { return "universal-viewer"; }
-
-      connectedCallback() {
-        super.connectedCallback();
-        this._headTags = [];
-        this._headTags.push(`<style>html {width:100%; height:${this.height};} body {height:100%;}</style>`);
-
-        this._bodyTags = [];
-        this._bodyTags.push(`<div class="uv" data-uri="${this.uri}" style="width:100%; height:100%; overflow:hidden;"></div>`);
-        this._bodyTags.push(`<script type="text/javascript" id="embedUV" src="http://universalviewer.io/uv/lib/embed.js"></scr`+`ipt>`);
-
-        let iframe = this.$['iframe-viewer'];
-        let iframeDoc = iframe.contentDocument;
-        let html = preamble() + head(this._headTags) + body(this._bodyTags) + postamble();
-        console.log(html);
-        iframeDoc.open();
-        iframeDoc.write(html);
-        iframeDoc.close();
-      }
-    }
-    customElements.define(UniversalViewer.is, UniversalViewer);
-  </script>
+  <script src="universal-viewer.js"></script>
 </dom-module>
