@@ -39,6 +39,7 @@ Make sure that you have yarn installed and then run:
 
 ### How to build (for dev)
 
+    bower install
     yarn run build:dev
 
 ### How to run locally (for dev)

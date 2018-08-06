@@ -1,6 +1,6 @@
 # ShadyCSS
 
-ShadyCSS provides a library to simulate ShadowDOM style encapsulation (ScopingShim), a shim for the proposed CSS mixin `@apply` styntax (ApplyShim), and a library to integrate document-level stylesheets with both of the former libraries (CustomStyleInterface).
+ShadyCSS provides a library to simulate ShadowDOM style encapsulation (ScopingShim), a shim for the proposed CSS mixin `@apply` syntax (ApplyShim), and a library to integrate document-level stylesheets with both of the former libraries (CustomStyleInterface).
 
 ## Requirements
 ShadyCSS requires support for the `<template>` element, ShadowDOM, MutationObserver, Promise, and Object.assign
@@ -92,6 +92,37 @@ my-element {
 ApplyShim provides a shim for the `@apply` syntax proposed at https://tabatkins.github.io/specs/css-apply-rule/, which expands the definition CSS Custom Properties to include objects that can be applied as a block.
 
 This is done by transforming the block definition into a set of CSS Custom Properties, and replacing uses of `@apply` with consumption of those custom properties.
+
+### Status:
+
+The `@apply` proposal has been abandoned in favor of the ::part/::theme [Shadow Parts spec](https://tabatkins.github.io/specs/css-shadow-parts/). Therefore, the ApplyShim library is deprecated and provided only for backwards compatibility. Support going forward will be limited to critical bug fixes.
+
+### Known Issues:
+
+* Mixin properties cannot be modified at runtime.
+* Nested mixins are not supported.
+* Shorthand properties are not expanded and may conflict with more explicit properties. Whenever shorthand notations are used in conjunction with their expanded forms in `@apply`, depending in the order of usage of the mixins, properties can be overridden. This means that using both `background-color: green;` and `background: red;` in two separate CSS selectors
+ can result in `background-color: transparent` in the selector that `background: red;` is specified.
+ 
+   ```css
+   #nonexistent {
+     --my-mixin: {
+       background: red;
+     }
+   }
+   ```
+   with an element style definition of
+   ```css
+   :host {
+     display: block;
+     background-color: green;
+     @apply(--my-mixin);
+   }
+   ```
+   results in the background being `transparent`, as an empty `background` definition replaces
+   the `@apply` definition. 
+ 
+   For this reason, we recommend avoiding shorthand properties.
 
 ### Example:
 
@@ -315,8 +346,10 @@ ShadyCSS.styleSubtree(el, {'--content-color' : 'red'});
 
 ### Selector scoping
 
-You must have a selector to the left of the `::slotted`
+You must have a selector for ascendants of the `<slot>` element when using the `::slotted`
 pseudo-element.
+
+You cannot use any selector for the `<slot>` element. Rules like `.foo .bar::slotted(*)` are not supported.
 
 ### Custom properties and `@apply`
 
@@ -333,7 +366,7 @@ defines the property in its host's stylesheet.
 
 ### `<custom-style>` Flash of unstyled content
 
-If `ShadyCss.applyStyle` is never called, `<custom-style>` elements will process
+If `ShadyCSS.applyStyle` is never called, `<custom-style>` elements will process
 after HTML Imports have loaded, after the document loads, or after the next paint.
 This means that there may be a flash of unstyled content on the first load.
 
@@ -342,3 +375,26 @@ This means that there may be a flash of unstyled content on the first load.
 Crawling the DOM and updating styles is very expensive, and we found that trying to
 update mixins through `<slot>` insertion points to be too expensive to justify for both
 polyfilled CSS Mixins and polyfilled CSS Custom Properties.
+
+### External stylesheets not currently supported
+
+External stylesheets loaded via `<link rel="stylesheet">` within a shadow root or
+`@import` syntax inside a shadow root's stylesheet are not currently shimmed by
+the polyfill.  This is mainly due to the fact that shimming them would require
+a fetch of the stylesheet text that is async cannot be easily coordinated with
+the upgrade timing of custom elements using them, making it impossible to avoid
+"flash of unstyled content" when running on polyfill.
+
+### Document level styling is not scoped by default
+
+ShadyCSS mimics the behavior of shadow dom, but it is not able to prevent document
+level styling to affect elements inside a shady dom. Global styles defined in
+`index.html` or any styles not processed by ShadyCSS will affect all elements on the page.
+
+To scope document level styling, the style must be wrapped in the `<custom-style>` element
+found in Polymer, or use the `CustomStyleInterface` library to modify document level styles.
+
+### Dynamically created styles are not supported
+
+ShadyCSS works by processing a template for a given custom element class. Only the style
+elements present in that template will be scoped for the custom element's ShadowRoot.

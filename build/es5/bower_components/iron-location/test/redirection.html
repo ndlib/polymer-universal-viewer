@@ -13,12 +13,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script>
     Polymer({
       is: 'redirect-hash',
-      properties: {
-        hash: {
-          value: '',
-          observer: 'hashChanged'
-        }
-      },
+      properties: {hash: {value: '', observer: 'hashChanged'}},
       hashChanged: function(hash) {
         this.hash = 'redirectedTo';
       }
@@ -33,12 +28,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script>
     Polymer({
       is: 'redirect-path',
-      properties: {
-        path: {
-          value: '',
-          observer: 'pathChanged'
-        }
-      },
+      properties: {path: {value: '', observer: 'pathChanged'}},
       pathChanged: function(path) {
         this.path = '/redirectedTo';
       }
@@ -53,12 +43,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script>
     Polymer({
       is: 'redirect-query',
-      properties: {
-        query: {
-          value: '',
-          observer: 'queryChanged'
-        }
-      },
+      properties: {query: {value: '', observer: 'queryChanged'}},
       queryChanged: function(query) {
         this.query = 'redirectedTo';
       }

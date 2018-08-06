@@ -30,7 +30,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
    * data-binding and declarative event features when used in the context of
    * a Polymer element's template.
    *
-   * When `if` becomes falsey, the stamped content is hidden but not
+   * When `if` becomes falsy, the stamped content is hidden but not
    * removed from dom. When `if` subsequently becomes truthy again, the content
    * is simply re-shown. This approach is used due to its favorable performance
    * characteristics: the expense of creating template content is paid only
@@ -39,7 +39,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
    * Set the `restamp` property to true to force the stamped content to be
    * created / destroyed when the `if` condition changes.
    *
-   * @polymerElement
+   * @customElement
+   * @polymer
    * @extends Polymer.Element
    * @memberof Polymer
    * @summary Custom element that conditionally stamps and hides or removes
@@ -109,6 +110,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       _this.__renderDebouncer = null;
       _this.__invalidProps = null;
       _this.__instance = null;
+      _this._lastIf = false;
+      _this.__ctor = null;
       return _this;
     }
 
@@ -138,6 +141,11 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         });
         Polymer.enqueueDebouncer(this.__renderDebouncer);
       }
+
+      /**
+       * @return {void}
+       */
+
     }, {
       key: 'disconnectedCallback',
       value: function disconnectedCallback() {
@@ -146,10 +154,16 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
           this.__teardownInstance();
         }
       }
+
+      /**
+       * @return {void}
+       */
+
     }, {
       key: 'connectedCallback',
       value: function connectedCallback() {
         _get(DomIf.prototype.__proto__ || Object.getPrototypeOf(DomIf.prototype), 'connectedCallback', this).call(this);
+        this.style.display = 'none';
         if (this.if) {
           this.__debounceRender();
         }
@@ -161,6 +175,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
        * that multiple changes trigger only a single render. The render method
        * should be called if, for example, template rendering is required to
        * validate application state.
+       * @return {void}
        */
 
     }, {
@@ -200,7 +215,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         // Guard against element being detached while render was queued
         if (parentNode) {
           if (!this.__ctor) {
-            var template = this.querySelector('template');
+            var template = /** @type {HTMLTemplateElement} */this.querySelector('template');
             if (!template) {
               // Wait until childList changes and template should be there by then
               var observer = new MutationObserver(function () {
@@ -218,6 +233,11 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
               // dom-if templatizer instances require `mutable: true`, as
               // `__syncHostProperties` relies on that behavior to sync objects
               mutableData: true,
+              /**
+               * @param {string} prop Property to forward
+               * @param {*} value Value of property
+               * @this {this}
+               */
               forwardHostProp: function forwardHostProp(prop, value) {
                 if (this.__instance) {
                   if (this.if) {
@@ -281,6 +301,15 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
           this.__invalidProps = null;
         }
       }
+
+      /**
+       * Shows or hides the template instance top level child elements. For
+       * text nodes, `textContent` is removed while "hidden" and replaced when
+       * "shown."
+       * @return {void}
+       * @protected
+       */
+
     }, {
       key: '_showHideChildren',
       value: function _showHideChildren() {

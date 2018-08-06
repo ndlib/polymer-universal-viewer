@@ -17,9 +17,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 (function () {
   'use strict';
 
-  /** @typedef {{run: function(function(), number=):number, cancel: function(number)}} */
-
-  var AsyncModule = void 0; // eslint-disable-line no-unused-vars
+  /**
+   * @summary Collapse multiple callbacks into one invocation after a timer.
+   * @memberof Polymer
+   */
 
   var Debouncer = function () {
     function Debouncer() {
@@ -34,8 +35,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      * a callback and optional arguments to be passed to the run function
      * from the async module.
      *
-     * @param {!AsyncModule} asyncModule Object with Async interface.
+     * @param {!AsyncInterface} asyncModule Object with Async interface.
      * @param {function()} callback Callback to run.
+     * @return {void}
      */
 
 
@@ -53,6 +55,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
       /**
        * Cancels an active debouncer and returns a reference to itself.
+       *
+       * @return {void}
        */
 
     }, {
@@ -65,6 +69,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
       /**
        * Flushes an active debouncer and returns a reference to itself.
+       *
+       * @return {void}
        */
 
     }, {
@@ -111,8 +117,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
        * `_debounceWork` method. Then in a test, call `Polymer.flush` to ensure
        * the debouncer has completed.
        *
-       * @param {Polymer.Debouncer?} debouncer Debouncer object.
-       * @param {!AsyncModule} asyncModule Object with Async interface
+       * @param {Debouncer?} debouncer Debouncer object.
+       * @param {!AsyncInterface} asyncModule Object with Async interface
        * @param {function()} callback Callback to run.
        * @return {!Debouncer} Returns a debouncer object.
        */
@@ -132,11 +138,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     return Debouncer;
   }();
-
-  /**
-   * @memberof Polymer
-   */
-
 
   Polymer.Debouncer = Debouncer;
 })();</script>

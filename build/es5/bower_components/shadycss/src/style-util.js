@@ -10,9 +10,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 'use strict';
 
-import {nativeShadow, nativeCssVariables} from './style-settings.js'
-import {parse, stringify, types, StyleNode} from './css-parse.js' // eslint-disable-line no-unused-vars
+import {nativeShadow, nativeCssVariables} from './style-settings.js';
+import {parse, stringify, types, StyleNode} from './css-parse.js'; // eslint-disable-line no-unused-vars
 import {MEDIA_MATCH} from './common-regex.js';
+import {processUnscopedStyle, isUnscopedStyle} from './unscoped-style-handler.js';
 
 /**
  * @param {string|StyleNode} rules
@@ -188,7 +189,7 @@ export function getCssBuildType(element) {
  * @param {number} start
  * @return {number}
  */
-function findMatchingParen(text, start) {
+export function findMatchingParen(text, start) {
   let level = 0;
   for (let i=start, l=text.length; i < l; i++) {
     if (text[i] === '(') {
@@ -267,4 +268,58 @@ export function getIsExtends(element) {
     typeExtension = /** @type {?} */(element).extends;
   }
   return {is, typeExtension};
+}
+
+/**
+ * @param {Element|DocumentFragment} element
+ * @return {string}
+ */
+export function gatherStyleText(element) {
+  /** @type {!Array<string>} */
+  const styleTextParts = [];
+  const styles = /** @type {!NodeList<!HTMLStyleElement>} */(element.querySelectorAll('style'));
+  for (let i = 0; i < styles.length; i++) {
+    const style = styles[i];
+    if (isUnscopedStyle(style)) {
+      if (!nativeShadow) {
+        processUnscopedStyle(style);
+        style.parentNode.removeChild(style);
+      }
+    } else {
+      styleTextParts.push(style.textContent);
+      style.parentNode.removeChild(style);
+    }
+  }
+  return styleTextParts.join('').trim();
+}
+
+/**
+ * Split a selector separated by commas into an array in a smart way
+ * @param {string} selector
+ * @return {!Array<string>}
+ */
+export function splitSelectorList(selector) {
+  const parts = [];
+  let part = '';
+  for (let i = 0; i >= 0 && i < selector.length; i++) {
+    // A selector with parentheses will be one complete part
+    if (selector[i] === '(') {
+      // find the matching paren
+      const end = findMatchingParen(selector, i);
+      // push the paren block into the part
+      part += selector.slice(i, end + 1);
+      // move the index to after the paren block
+      i = end;
+    } else if (selector[i] === ',') {
+      parts.push(part);
+      part = '';
+    } else {
+      part += selector[i];
+    }
+  }
+  // catch any pieces after the last comma
+  if (part) {
+    parts.push(part);
+  }
+  return parts;
 }

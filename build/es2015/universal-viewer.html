@@ -1,20 +1,9 @@
-<link rel="import" href="../../../polymer/polymer-element.html">
+<link rel="import" href="./bower_components/polymer/polymer-element.html">
 <link rel="import" href="./lib/embed.html">
 
 <dom-module id="universal-viewer">
   <template>
-    <style>
-    :host {
-      display: block;
-      @apply --universal-viewer-component-theme;
-      width: var(--universal-viewer-component-width);
-      height: var(--universal-viewer-component-height);
-    }
-    :host div {
-      width: 100%;
-      height: 100%;
-    }
-    </style>
+
 
     <div id="container-{{_viewerCount}}">
       <div class="uv" data-uri$="[[uri]]" width="100%" height="100%" overflow="hidden" seamless="seamless"></div>

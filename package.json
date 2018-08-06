@@ -10,7 +10,7 @@
     "iiif"
   ],
   "scripts": {
-    "clean": "rm -rf bower_components/ node_modules/ build/",
+    "clean": "rm -rf node_modules/ build/",
     "pre-build": "yarn run clean; yarn install; bower install",
     "build:dev": "yarn run pre-build; gulp build:dev",
     "build:test": "yarn run pre-build; gulp build:test",
@@ -28,7 +28,6 @@
     "test": "yarn run test:win; yarn run test:osx",
     "run:dev": "http-server -p 3000 --bind 0.0.0.0 --cors"
   },
-  "dependencies": {},
   "devDependencies": {
     "babel-preset-es2015": "^6.24.1",
     "bower": "^1.8.0",
